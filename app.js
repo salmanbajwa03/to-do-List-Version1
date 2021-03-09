@@ -8,6 +8,7 @@ app.use(bodyParser.urlencoded({extended:true}));
 app.use(express.static("public")); //For Static behaviour
 const PORT = 3000;
 var newItems=["Buy Food","Cook Food","Eat Food"];
+var workItems=[];
 
 
 
@@ -22,16 +23,36 @@ app.get('/',(req,res) =>{
     var day=today.toLocaleDateString("en-US",options);
 
     res.render('list',{
-        kindOfDay : day,
+        listTitle : day,
         newListItems:newItems
     });
 });
 
+
+app.get("/work",(req,res)=>{
+    res.render('list',{
+        listTitle : "Work List",
+        newListItems:workItems
+    }); 
+});
+
 app.post('/',  (req, res)=> {
-    var item =req.body.newItem;
-    newItems.push(item);
-    res.redirect("/");
-})
+
+    if(req.body.button ==="Work List")
+    {
+        var item = req.body.newItem;
+        workItems.push(item);
+        res.redirect("/work");
+    }
+    else
+    {
+        var item =req.body.newItem;
+        newItems.push(item);
+        res.redirect("/");
+    }
+});
+
+
 
 
 app.listen(PORT, () => console.log(`Example app listening on port port!`));
